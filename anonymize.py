@@ -24,10 +24,17 @@ def anonymize(records: Records) -> Records:
 
 
 pathToApp = "/Users/eric/workspace/turbine-py-examples/fixtures"
+
 cfg = AppConfig("test", "test", "test", {"pg": "pg.json", "s3": ""})
+
 tb = Turbine(cfg, pathToApp, True)
+
 resource = tb.runtime.resources("pg")
+
 records = resource.records("user_activity")
+
 anonymized = tb.process(records.records, anonymize)
+
 destination = tb.runtime.resources("s3")
+
 destination.write(anonymized, "user_activity")
