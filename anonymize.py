@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import hashlib
 from turbine import Turbine
 from turbine.runtime import AppConfig
@@ -23,11 +25,15 @@ def anonymize(records: Records) -> Records:
     return Records(records=updated, stream="")
 
 
-pathToApp = "/Users/eric/workspace/turbine-py-examples/fixtures"
+pathToApp = "/Users/ericcheatham/workspace/turbine-py-examples/fixtures"
 
 cfg = AppConfig("test", "test", "test", {"pg": "pg.json", "s3": ""})
 
-tb = Turbine(cfg, pathToApp, True)
+tb = Turbine(
+    config=cfg,
+    pathToApp=pathToApp,
+    is_local=True
+)
 
 resource = tb.runtime.resources("pg")
 
