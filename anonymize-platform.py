@@ -8,9 +8,6 @@ from turbine import Turbine
 from turbine.runtime import AppConfig
 from turbine.runtime import Record, Records
 
-import typing as t
-
-
 def anonymize(records: Records) -> Records:
     updated = []
     for record in records:
@@ -28,13 +25,12 @@ def anonymize(records: Records) -> Records:
     return Records(records=updated, stream="")
 
 
-
 cfg = AppConfig(
     name="default",
     environment="staging",
     pipeline="Default",
     resources={
-        "pg": "cheatham-resource-mar2",
+        "pg": "store",
         "s3": ""
     }
 )
@@ -46,9 +42,10 @@ clientOptions = meroxa.ClientOptions(
 )
 
 
-# Aysnc calls in python are required to be run in either a context
-# manager or a managed async loop of some sort
-async def main():
+""" 
+Entrypoint for a turbine app running against the Meroxa platform
+"""
+async def main(options):
 
     # Instantiate turbine client -> Platform runtime
     tb = Turbine(
@@ -59,12 +56,24 @@ async def main():
     )
 
     # Get remote resource
-    resource = await tb.runtime.resources("cheatham-resource-mar2")
+    resource = await tb.runtime.resources("store")
 
     # Read from remote resource
     records = await resource.records("diffuser")
 
     print(records)
 
+    # Get destination
+    dest = await tb.runtime.resources("dest")
 
-asyncio.run(main())
+    # Deploy function with source as input
+    # anonymized = await tb.runtime.process(session, records, anonymize,
+    # {"test": "envvar"})
+
+    # Write
+
+    # print(anonymized)
+
+
+# Schedules and runs the asyncronous corutine that uses the turbine platform 
+asyncio.run(main(clientOptions))

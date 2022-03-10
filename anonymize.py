@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
+import os
+
 import hashlib
+import typing as t
+
 from turbine import Turbine
 from turbine.runtime import AppConfig
 from turbine.runtime import Record, Records
-
-import typing as t
 
 
 def anonymize(records: Records) -> Records:
@@ -25,7 +27,7 @@ def anonymize(records: Records) -> Records:
     return Records(records=updated, stream="")
 
 
-pathToApp = "/Users/ericcheatham/workspace/turbine-py-examples/fixtures"
+pathToApp = os.path.abspath("./fixtures")
 
 cfg = AppConfig("test", "test", "test", {"pg": "pg.json", "s3": ""})
 
