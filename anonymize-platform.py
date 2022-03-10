@@ -8,6 +8,7 @@ from turbine import Turbine
 from turbine.runtime import AppConfig
 from turbine.runtime import Record, Records
 
+
 def anonymize(records: Records) -> Records:
     updated = []
     for record in records:
@@ -31,7 +32,7 @@ cfg = AppConfig(
     pipeline="Default",
     resources={
         "pg": "store",
-        "s3": ""
+        "s3": "s3"
     }
 )
 
@@ -56,24 +57,19 @@ async def main(options):
     )
 
     # Get remote resource
-    resource = await tb.runtime.resources("store")
+    source = await tb.runtime.resources("store")
 
     # Read from remote resource
-    records = await resource.records("diffuser")
-
-    print(records)
-
-    # Get destination
-    dest = await tb.runtime.resources("dest")
+    records = await source.records("diffuser")
 
     # Deploy function with source as input
-    # anonymized = await tb.runtime.process(session, records, anonymize,
-    # {"test": "envvar"})
+    anonymized = await tb.runtime.process(records, anonymize, {"test": "var"})
 
-    # Write
+    # Get destination
+    destinationDb = await tb.runtime.resources("s3")
 
-    # print(anonymized)
+    # Write results out
+    await destinationDb.write(anonymized, "user_activity")
 
-
-# Schedules and runs the asyncronous corutine that uses the turbine platform 
+# Schedules and runs the asyncronous corutine that uses the turbine platform
 asyncio.run(main(clientOptions))
