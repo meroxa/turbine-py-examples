@@ -26,16 +26,7 @@ def anonymize(records: Records) -> Records:
         )
     return Records(records=updated, stream="")
 
-
-pathToApp = os.path.abspath("./fixtures")
-
-cfg = AppConfig("test", "test", "test", {"pg": "pg.json", "s3": ""})
-
-tb = Turbine(
-    config=cfg,
-    pathToApp=pathToApp,
-    is_local=True
-)
+tb = Turbine(runtime='local', path_to_data_app='.')
 
 resource = tb.runtime.resources("pg")
 
