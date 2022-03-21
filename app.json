@@ -1,0 +1,10 @@
+{
+    "name": "default",
+    "language": "python",
+    "environment": "common",
+    "pipeline": "default",
+    "resources": {
+      "pg": "fixtures/pg.json",
+      "s3": ""
+    }
+  }
