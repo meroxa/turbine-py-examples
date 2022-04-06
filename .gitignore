@@ -1,4 +1,3 @@
 /build
 /src/Turbine_py*
-
-.DS_Store
+__pycache__

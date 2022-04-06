@@ -1,10 +1,7 @@
 {
-    "name": "default",
+    "name": "python-sample-data-app",
     "language": "python",
-    "environment": "common",
-    "pipeline": "default",
     "resources": {
-      "pg": "fixtures/pg.json",
-      "s3": ""
+        "source_name": "fixtures/none.json"
     }
-  }
+}
