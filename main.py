@@ -10,17 +10,21 @@ from turbine.runtime import Record
 def anonymize(records: t.List[Record]) -> t.List[Record]:
     updated = []
     for record in records:
-        value_to_update = record.value
-        hashed_email = hashlib.sha256(
-            value_to_update['payload']['after']['email'].encode()).hexdigest()
-        value_to_update['payload']['after']['email'] = hashed_email
-        updated.append(
-            Record(
-                key=record.key,
-                value=value_to_update,
-                timestamp=record.timestamp
+        try:
+            value_to_update = record.value
+            hashed_email = hashlib.sha256(
+                value_to_update['payload']['after']['email'].encode()).hexdigest()
+            value_to_update['payload']['after']['email'] = hashed_email
+            updated.append(
+                Record(
+                    key=record.key,
+                    value=value_to_update,
+                    timestamp=record.timestamp
+                )
             )
-        )
+        except Exception as e:
+            print("Error occured while parsing records: " + str(e))
+
     return updated
 
 
