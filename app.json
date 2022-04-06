@@ -2,6 +2,6 @@
     "name": "python-sample-data-app",
     "language": "python",
     "resources": {
-        "source_name": "fixtures/none.json"
+        "source_name": "fixtures/pg.json"
     }
 }
