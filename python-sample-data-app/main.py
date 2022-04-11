@@ -2,7 +2,7 @@ import asyncio
 import hashlib
 import os
 import typing as t
-
+import pdb
 from turbine import Turbine
 from turbine.runtime import Record
 
@@ -33,19 +33,37 @@ class App:
     @staticmethod
     async def run(turbine: Turbine):
         # Get remote resource
-        source = await turbine.resources("source_name")
+        try:
+            # Find resource 
+            source = await turbine.resources("source_name")
+            if isinstance(source, ChildProcessError):
+                raise ChildProcessError(source)
 
-        # Read from remote resource
-        records = await source.records("collection_name")
+            # Read from remote resource
+            records = await source.records("collection_name")
+            if isinstance(records, ChildProcessError):
+                raise ChildProcessError(records)
 
-        # Deploy function with source as input
-        anonymized = await turbine.process(records, anonymize)
+            # Deploy function with source as input
+            anonymized = await turbine.process(records, anonymize)
+            if isinstance(anonymized, ChildProcessError):
+                raise ChildProcessError(anonymized)
 
-        # Get destination
-        destination_db = await turbine.resources("destination_name")
+            # Get destination
+            destination_db = await turbine.resources("destination_name")
+            if isinstance(destination_db, ChildProcessError):
+                raise ChildProcessError(destination_db)
 
-        # Write results out
-        await destination_db.write(anonymized, "collection_name")
+            # Write results out
+            results = await destination_db.write(anonymized, "collection_name")
+            if isinstance(results, ChildProcessError):
+                raise ChildProcessError(results)
+
+        except ChildProcessError as cpe: 
+            print(cpe)
+        except Exception as e: 
+            print(e)
+        
 
 
 def main():
