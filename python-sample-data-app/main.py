@@ -5,7 +5,7 @@ import typing as t
 import pdb
 from turbine import Turbine
 from turbine.runtime import Record
-
+import pdb
 
 def anonymize(records: t.List[Record]) -> t.List[Record]:
     updated = []
@@ -32,6 +32,7 @@ class App:
 
     @staticmethod
     async def run(turbine: Turbine):
+<<<<<<< Updated upstream
         # Get remote resource
         try:
             # Find resource 
@@ -64,6 +65,28 @@ class App:
         except Exception as e: 
             print(e)
         
+=======
+        try: 
+            # Get remote resource
+            source = await turbine.resources("source_name")
+
+            # Read from remote resource
+            records = await source.records("collection_name")
+
+            # Deploy function with source as input
+            anonymized = await turbine.process(records, anonymize)
+
+            # Get destination
+            destination_db = await turbine.resources("destination_name")
+
+            # Write results out
+            await destination_db.write(anonymized, "collection_name")
+            
+        except ChildProcessError as cpe:
+            print(cpe)
+        except Exception as e:
+            print(e)
+>>>>>>> Stashed changes
 
 
 def main():
