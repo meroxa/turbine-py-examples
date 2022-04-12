@@ -19,7 +19,9 @@ def anonymize(records: t.List[Record]) -> t.List[Record]:
             value_to_update["payload"]["after"]["email"] = hashed_email
             updated.append(
                 Record(
-                    key=record.key, value=value_to_update, timestamp=record.timestamp
+                    key=record.key, 
+                    value=value_to_update, 
+                    timestamp=record.timestamp
                 )
             )
         except Exception as e:
@@ -56,8 +58,14 @@ class App:
 def main():
     curr = os.path.abspath(os.path.dirname(__file__))
 
-    asyncio.run(App.run(Turbine(runtime="local", path_to_data_app=curr)))
-
+    asyncio.run(
+        App.run(
+            Turbine(
+                runtime="local",
+                path_to_data_app=curr
+            )
+        )
+    )
 
 if __name__ == "__main__":
     main()
