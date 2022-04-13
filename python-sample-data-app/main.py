@@ -1,10 +1,7 @@
-import asyncio
 import hashlib
-import os
 import typing as t
 from turbine import Turbine
 from turbine.runtime import Record
-
 
 
 def anonymize(records: t.List[Record]) -> t.List[Record]:
@@ -24,7 +21,7 @@ def anonymize(records: t.List[Record]) -> t.List[Record]:
                 )
             )
         except Exception as e:
-            print("Error occured while parsing records: " + str(e))
+            print("Error occurred while parsing records: " + str(e))
 
     return updated
 
@@ -53,18 +50,3 @@ class App:
         except Exception as e:
             print(e)
 
-
-def main():
-    curr = os.path.abspath(os.path.dirname(__file__))
-
-    asyncio.run(
-        App.run(
-            Turbine(
-                runtime="local",
-                path_to_data_app=curr
-            )
-        )
-    )
-
-if __name__ == "__main__":
-    main()
