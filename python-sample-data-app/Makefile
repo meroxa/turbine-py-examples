@@ -1,7 +1,4 @@
-.PHONY: init
-init:
-    pip install -r requirements.txt
+SHELL=/bin/bash -o pipefail
 
-.PHONY: test
-test:
-    py.test tests
+install: requirements.txt
+	pip install -r requirements.txt
