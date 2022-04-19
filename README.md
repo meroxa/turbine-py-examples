@@ -1,9 +1,9 @@
-# Meroxa Data App
+# turbine-py-examples
 
 ## Dependencies
 * Python > v3.5
 * [turbine-py](https://github.com/meroxa/turbine-py)
 
-## Getting Started
----
-### Requirements 
+### License
+
+Licensed under the [MIT License](./LICENSE.md).
