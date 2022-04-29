@@ -1,0 +1,7 @@
+{
+    "name": "test7",
+    "language": "python",
+    "resources": {
+        "pg": "fixtures/demo-no-cdc.json"
+    }
+}
