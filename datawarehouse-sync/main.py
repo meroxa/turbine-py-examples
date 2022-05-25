@@ -16,12 +16,7 @@ def unwrap_envelope(records: t.List[Record]) -> t.List[Record]:
 
         try:
             if check_cdc_envelope(record):
-                payload = payload["after"]
-                new_record = Record(
-                    key=record.key,
-                    value=payload,
-                    timestamp=record.timestamp,
-                )
+                new_record = unwrap_cdc_envelope(record)
                 updated.append(new_record)
             elif check_schema_envelope(record):
                 # no need to unwrap
@@ -43,6 +38,22 @@ def check_schema_envelope(record: Record) -> bool:
         return True
     else:
         return False
+
+def unwrap_cdc_envelope(record: Record) -> Record:
+    '''unwraps the CDC envelope from the record returning only the payload, with the correct schema'''
+    payload = record.value["payload"]
+    schema_fields = record.value["schema"]["fields"]
+    for i in schema_fields:
+        if i["field"] == "after":
+            print("found after schema")
+            # reformat schema
+            del i['field']
+            i['name'] = record.value["schema"]["name"]
+            record.value["schema"] = i
+            break
+
+    record.value["payload"] = payload["after"]
+    return record
 
 class App:
     @staticmethod
