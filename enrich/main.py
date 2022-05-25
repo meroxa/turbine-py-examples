@@ -35,10 +35,13 @@ class App:
             records = await resource.records("user_activity")
 
             # Deploy function with source as input
-            enriched = await turbine.process(records, enrich_data, {})
+            enriched = await turbine.process(records, enrich_data)
+
+            # S3 Destination to warehouse our records
+            destination = await turbine.resources("webhook-desk")
 
             # Write results out
-            await resource.write(enriched, "user_activity_enriched")
+            await destination.write(enriched, "user_activity_enriched")
 
         except ChildProcessError as cpe:
             print(cpe)
