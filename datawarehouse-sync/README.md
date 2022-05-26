@@ -10,7 +10,7 @@ This Turbine App fetches data in real-time from an operational datastore (Postgr
 
 ## Run Locally
 
-I have included both non-CDC and CDC formatted fixtures (`pg.json` and `pg_cdc.json` respectively). You will need to update the `app.json` to map the desired ficture to the `pg` resource referenced in the Turbine app.
+I have included both non-CDC and CDC formatted fixtures (`pg.json` and `pg_cdc.json` respectively). You will need to update the `app.json` to map the desired fixture to the `pg` resource referenced in the Turbine app.
 
 To run (as with all Turbine Apps):
 
