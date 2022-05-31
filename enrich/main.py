@@ -12,11 +12,12 @@ def enrich_data(records: t.List[Record]) -> t.List[Record]:
 
         enrichment = enrich_user_email(record.value["payload"]["email"])
 
-        record.value["payload"]["full_name"] = enrichment.full_name
-        record.value["payload"]["company"] = enrichment.company
-        record.value["payload"]["location"] = enrichment.location
-        record.value["payload"]["role"] = enrichment.role
-        record.value["payload"]["seniority"] = enrichment.seniority
+        if enrichment:
+            record.value["payload"]["full_name"] = enrichment.full_name
+            record.value["payload"]["company"] = enrichment.company
+            record.value["payload"]["location"] = enrichment.location
+            record.value["payload"]["role"] = enrichment.role
+            record.value["payload"]["seniority"] = enrichment.seniority
 
     return records
 

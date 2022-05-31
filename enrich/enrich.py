@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 
 import requests
@@ -12,11 +14,7 @@ class UserDetails:
         self.company = company
 
 
-class EnrichmentError(Exception):
-    pass
-
-
-def enrich_user_email(email: str):
+def enrich_user_email(email: str) -> UserDetails | None:
     clearbit_key = os.getenv("CLEARBIT_API_KEY")
 
     params = {"email": email}
@@ -38,5 +36,5 @@ def enrich_user_email(email: str):
             seniority=person["employment"]["seniority"],
             company=company["name"],
         )
-    except Exception as e:
-        raise EnrichmentError(f"Error fetching information: {e}")
+    except Exception:
+        return None
