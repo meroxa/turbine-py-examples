@@ -36,5 +36,5 @@ def enrich_user_email(email: str) -> UserDetails | None:
             seniority=person["employment"]["seniority"],
             company=company["name"],
         )
-    except Exception:
+    except KeyError:
         return None
