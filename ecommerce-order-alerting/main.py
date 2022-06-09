@@ -1,4 +1,3 @@
-import json
 import logging
 import sys
 import typing as t
@@ -22,13 +21,9 @@ mutations
 
 
 def send_alert(records: t.List[Record]) -> t.List[Record]:
-    updated = []
     for record in records:
         try:
-            if isinstance(record.value, str):
-                payload = json.loads(record.value)["payload"]
-            else:
-                payload = record.value["payload"]
+            payload = record.value["payload"]
 
             # Hash the email
             payload["customer_email"] = hashlib.sha256(
@@ -37,12 +32,7 @@ def send_alert(records: t.List[Record]) -> t.List[Record]:
 
             send_slack_alert(webhook_url=WEBHOOK_URL, payload=payload)
 
-            if isinstance(record.value, str):
-                rec = json.loads(record.value)
-                rec["payload"] = payload
-                record.value = json.dumps(rec)
-            else:
-                record.value["payload"] = payload
+            record.value["payload"] = payload
 
         except Exception as e:
             logging.warning(f"Error occurred while parsing records: {e}")
