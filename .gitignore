@@ -1,3 +1,7 @@
 /build
-/src/Turbine_py*
+/src/*.egg-info
+/venv
+
 __pycache__
+
+.DS_Store
