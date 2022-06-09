@@ -1,3 +1,1 @@
-# will include meroxa-py once published
-autopep8==1.6.0
-aiohttp
+turbine-py
