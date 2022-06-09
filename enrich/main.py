@@ -8,15 +8,20 @@ from enrich import enrich_user_email
 
 def enrich_data(records: t.List[Record]) -> t.List[Record]:
     for record in records:
-        logging.info(f"Got email: {record.value['payload']['email']}")
+        try:
+            logging.info(f"Got email: {record.value['payload']['email']}")
 
-        enrichment = enrich_user_email(record.value["payload"]["email"])
+            enrichment = enrich_user_email(record.value["payload"]["email"])
 
-        record.value["payload"]["full_name"] = enrichment.full_name
-        record.value["payload"]["company"] = enrichment.company
-        record.value["payload"]["location"] = enrichment.location
-        record.value["payload"]["role"] = enrichment.role
-        record.value["payload"]["seniority"] = enrichment.seniority
+            if enrichment:
+                record.value["payload"]["full_name"] = enrichment.full_name
+                record.value["payload"]["company"] = enrichment.company
+                record.value["payload"]["location"] = enrichment.location
+                record.value["payload"]["role"] = enrichment.role
+                record.value["payload"]["seniority"] = enrichment.seniority
+        except (KeyError, TypeError) as e:
+            print(f"Error enriching data: {e}")
+            raise
 
     return records
 
@@ -33,6 +38,9 @@ class App:
 
             # Read from remote resource
             records = await resource.records("user_activity")
+
+            # Register clearbit API Secret
+            turbine.register_secrets("CLEARBIT_API_KEY")
 
             # Deploy function with source as input
             enriched = await turbine.process(records, enrich_data)
