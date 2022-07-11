@@ -1,0 +1,7 @@
+{
+    "name": "datawarehouse-sync",
+    "language": "python",
+    "resources": {
+        "pg": "fixtures/pg_cdc.json"
+    }
+}
