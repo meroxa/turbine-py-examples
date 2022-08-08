@@ -1,12 +1,11 @@
 import logging
-import typing as t
 
-from turbine.runtime import Record, Runtime
+from turbine.runtime import RecordList, Runtime
 
 from enrich import enrich_user_email
 
 
-def enrich_data(records: t.List[Record]) -> t.List[Record]:
+def enrich_data(records: RecordList) -> RecordList:
     for record in records:
         try:
             logging.info(f"Got email: {record.value['payload']['email']}")
