@@ -1,12 +1,11 @@
 import logging
 import sys
-import typing as t
 
 import hashlib
 
 from datetime import date
 
-from turbine.runtime import Record, Runtime
+from turbine.runtime import RecordList, Runtime
 
 from alert import send_slack_alert
 from constants import WEBHOOK_URL
@@ -20,7 +19,7 @@ mutations
 """
 
 
-def send_alert(records: t.List[Record]) -> t.List[Record]:
+def send_alert(records: RecordList) -> RecordList:
     for record in records:
         try:
             payload = record.value["payload"]

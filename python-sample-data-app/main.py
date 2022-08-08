@@ -8,7 +8,7 @@ from turbine.runtime import Record, Runtime
 logging.basicConfig(level=logging.INFO)
 
 
-def anonymize(records: t.List[Record]) -> t.List[Record]:
+def anonymize(records: RecordList) -> RecordList:
     logging.info(f"processing {len(records)} record(s)")
     for record in records:
         logging.info(f"input: {record}")
