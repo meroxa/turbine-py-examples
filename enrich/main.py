@@ -1,7 +1,6 @@
 import logging
-import typing as t
 
-from turbine.runtime import Record, Runtime
+from turbine.runtime import RecordList, Runtime
 
 from enrich import enrich_user_email
 

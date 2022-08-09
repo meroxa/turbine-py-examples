@@ -1,9 +1,8 @@
 import hashlib
 import logging
 import sys
-import typing as t
 
-from turbine.runtime import Record, Runtime
+from turbine.runtime import RecordList, Runtime
 
 logging.basicConfig(level=logging.INFO)
 
