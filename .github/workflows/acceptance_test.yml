@@ -1,0 +1,52 @@
+name: Acceptance Tests
+on:
+  pull_request:
+jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup python
+      uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    - run: brew tap meroxa/taps && brew install meroxa
+#    - name: Check out code into the Go module directory
+#      uses: actions/checkout@v3
+#    - name: Build
+#      run: |
+#       make build
+#  golangci:
+#    name: lint
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/setup-go@v3
+#        with:
+#          go-version: ^1.18
+#      - uses: actions/checkout@v3
+#      - name: golangci-lint
+#        uses: golangci/golangci-lint-action@v3
+#        with:
+#          args: --timeout 4m0s
+#  vet:
+#    name: Vet
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#      - name: Vet
+#        run: go vet ./...
+#  test:
+#    name: Test
+#    needs: [ build ]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#      - uses: actions/setup-go@v3
+#        with:
+#          go-version: ^1.18
+#      - name: Run tests
+#        run: |
+#         make test
+#        env:
+#         GOPATH: /home/runner/work/cli/go
