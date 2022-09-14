@@ -46,4 +46,4 @@ jobs:
       - name: Run data apps
         run:
           # Run example apps that do not make external requests
-          meroxa apps run ./python-sample-data-app
+          meroxa apps run --path ./python-sample-data-app
