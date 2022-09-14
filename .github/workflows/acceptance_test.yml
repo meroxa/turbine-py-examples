@@ -26,7 +26,6 @@ jobs:
       - run: pip install tox
       - run: tox -e py39
   execute:
-    name: "Execute turbine examples"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -44,7 +43,7 @@ jobs:
         run: |
           pip install turbine-py
           brew tap meroxa/taps && brew install meroxa
-       - name: Run data apps
-         run:
-           # Run example apps that do not make external requests
-           meroxa apps run ./python-sample-data-app
+      - name: Run data apps
+        run:
+          # Run example apps that do not make external requests
+          meroxa apps run ./python-sample-data-app
