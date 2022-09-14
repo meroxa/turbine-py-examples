@@ -1,6 +1,8 @@
 /build
-/src/*.egg-info
+*.egg-info
 /venv
+
+/.tox/*
 
 __pycache__
 
