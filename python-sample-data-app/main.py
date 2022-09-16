@@ -12,11 +12,11 @@ def anonymize(records: RecordList) -> RecordList:
     for record in records:
         logging.info(f"input: {record}")
         try:
-            payload = record.value["payload"]
+            payload = record.value["payload"]["after"]
 
             # Hash the email
-            payload["customer_email"] = hashlib.sha256(
-                payload["customer_email"].encode("utf-8")
+            payload["email"] = hashlib.sha256(
+                payload["email"].encode("utf-8")
             ).hexdigest()
 
             logging.info(f"output: {record}")
