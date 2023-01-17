@@ -29,6 +29,8 @@ jobs:
           python-version: '3.9'
           cache: 'pip'
           cache-dependency-path: '*.txt'
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@master
       - name: update pip
         run: |
           pip install -U wheel
