@@ -37,6 +37,5 @@ def write_records(data: dict):
                 table_or_uri=maybe_table, data=pd.DataFrame(data), mode="append"
             )
     except Exception as e:
-        print(e)
         capture_exception(e)
         return

@@ -6,7 +6,6 @@ import sentry_sdk
 from turbine.runtime import RecordList, Runtime
 
 import enhance
-import delta_spark
 import utils
 
 logging.basicConfig(level=logging.INFO)
@@ -17,7 +16,7 @@ sentry_sdk.init(
 )
 
 
-def write_to_delta(records: RecordList) -> RecordList:
+def format_and_enrich(records: RecordList) -> RecordList:
     """
     In order to write to a DeltaTable using delta-rs we need to convert our Record/Fixture
     data into a [DataFrame](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html)
@@ -35,9 +34,9 @@ def write_to_delta(records: RecordList) -> RecordList:
         Turbine functions can invoke other fuctions that make REST requests.
         We are also able to modify records in a turbine function however needed
         """
-        # geolocation = enhance.GeoLocation(payload["postcode"])
-        # payload.value["latitude"] = geolocation.latitude
-        # payload.value["longitude"] = geolocation.longitude
+        geolocation = enhance.GeoLocation(payload["postcode"])
+        payload.value["latitude"] = geolocation.latitude
+        payload.value["longitude"] = geolocation.longitude
 
         for key, val in payload.items():
             if key in data:
@@ -49,7 +48,7 @@ def write_to_delta(records: RecordList) -> RecordList:
     Turbine functions are able to access code in other modules within your application
     """
     # utils.write_records(data=data)
-    delta_spark.write_to_table(data=data)
+    utils.write_records(data=data)
 
     return records
 
@@ -74,7 +73,7 @@ class App:
 
             # API key for using Google Address validation API to enhance a record
             # with additional data
-            # turbine.register_secrets("GOOGLE_API_KEY")
+            turbine.register_secrets("GOOGLE_API_KEY")
 
 
             """
@@ -93,7 +92,7 @@ class App:
             Use turbine function defined above to write to a delta
             table. 
             """
-            processed = await turbine.process(unprocessed, write_to_delta)
+            processed = await turbine.process(unprocessed, format_and_enrich)
 
 
             silver_destination = await turbine.resources("flake")
