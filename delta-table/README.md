@@ -4,7 +4,7 @@
 ## Overview 
 
 Data App Architecture: 
-![Data App Architecture](https://whimsical.com/embed/5j9w4PuHqJLHe39PdasQvx@2Ux7TurymNHEtkjvQXoF)
+![Data App Architecture](/delta-table/img/arch.png)
 
 ## Requirments 
 ### Resources
