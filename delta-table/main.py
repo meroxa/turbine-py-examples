@@ -80,7 +80,7 @@ class App:
             Connect your turbine application to your data 
             source of choice (in this case, a postgres database)
             """
-            source = await turbine.resources("pg")
+            source = await turbine.resources("postgres_source")
 
             """
             Stream rows from source resource in the form of 
@@ -95,8 +95,8 @@ class App:
             processed = await turbine.process(unprocessed, format_and_enrich)
 
 
-            silver_destination = await turbine.resources("flake")
-            bronze_destination = await turbine.resources("pg")
+            silver_destination = await turbine.resources("snowflake_destination")
+            bronze_destination = await turbine.resources("S3_destination")
 
             await silver_destination.write(processed, "silverRecords", {})
             await bronze_destination.write(unprocessed, "bronzeRecords", {})
