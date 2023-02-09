@@ -4,7 +4,7 @@ import os
 
 import requests
 
-VALIDATION_API_URL = "https://addressvalidation.googleapis.com/v1:validateAddress?key="
+VALIDATION_API_URL = "https://maps.googleapis.com/maps/api/geocode/json"
 GOOGLE_KEY = os.getenv("GOOGLE_API_KEY")
 
 
@@ -15,13 +15,16 @@ class GeoLocation:
 
 
 def get_geo_location_from_postcode(postcode: str) -> GeoLocation:
-    response = requests.get(
+
+    params = {"postal_code": postcode, "key": GOOGLE_KEY}
+    response = requests.post(
         url=VALIDATION_API_URL + GOOGLE_KEY,
+        params=params
     )
 
-    geocode = response.json().get("person").get("geocode")
+    geocode = response.json().get("results").get("geometry")
 
     return GeoLocation(
-        lat=geocode.get("location").get("latitude"),
-        lon=geocode.get("location").get("longitude"),
+        lat=geocode.get("location").get("lat"),
+        lon=geocode.get("location").get("lng"),
     )
