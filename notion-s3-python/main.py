@@ -10,11 +10,13 @@ logging.basicConfig(level=logging.INFO)
 def character_count(records: RecordList) -> RecordList:
     for record in records:
         try:
-            plaintext = record.value["plaintext"]
-            metadata = record.value["metadata"]
+            payload = record.value["payload"]["after"]
+            metadata = payload["metadata"]
+
+            plaintext_len = len(payload.get('plaintext'))
 
             # Add the character count in the metadata JSON
-            metadata["characterCount"] = len(plaintext)
+            metadata.update({"characterCount": len(plaintext_len)})
         except Exception as e:
             print("Error occurred while parsing records: " + str(e))
     return records
