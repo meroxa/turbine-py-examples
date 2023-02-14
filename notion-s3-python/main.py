@@ -16,7 +16,7 @@ def character_count(records: RecordList) -> RecordList:
             plaintext_len = len(payload.get('plaintext'))
 
             # Add the character count in the metadata JSON
-            metadata.update({"characterCount": len(plaintext_len)})
+            metadata.update({"characterCount": plaintext_len})
         except Exception as e:
             print("Error occurred while parsing records: " + str(e))
     return records
