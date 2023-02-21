@@ -63,9 +63,9 @@ class App:
             raw = await source.records("employees")
 
             processed = await turbine.process(raw, format_and_enrich)
-            silver = await turbine.resources("snowflake_destination")
+            silver = await turbine.resources("redshift")
 
-            await silver.write(processed, "silverRecords", {})
+            await silver.write(processed, "employees_enriched", {})
 
         except Exception as e:
             print(e, file=sys.stderr)
