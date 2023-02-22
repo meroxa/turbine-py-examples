@@ -7,6 +7,7 @@ import requests
 VALIDATION_API_URL = "https://maps.googleapis.com/maps/api/geocode/json"
 GOOGLE_KEY = os.getenv("GOOGLE_API_KEY")
 
+NULL_ISLAND = 0.0
 
 class GeoLocation:
     def __init__(self, lat, lon):
@@ -25,8 +26,8 @@ def get_geo_location_from_postcode(postcode: str) -> GeoLocation:
     maybe_geocode = response.json().get("results")
     response_is_empty = len(maybe_geocode) == 0
 
-    lat = maybe_geocode[0].get("geometry").get("location").get("lat") if not response_is_empty else None
-    lon = maybe_geocode[0].get("geometry").get("location").get("lng") if not response_is_empty else None
+    lat = maybe_geocode[0].get("geometry").get("location").get("lat") if not response_is_empty else NULL_ISLAND
+    lon = maybe_geocode[0].get("geometry").get("location").get("lng") if not response_is_empty else NULL_ISLAND
 
     return GeoLocation(
         lat=lat,
