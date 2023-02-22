@@ -22,9 +22,13 @@ def get_geo_location_from_postcode(postcode: str) -> GeoLocation:
         params=params
     )
 
-    geocode = response.json().get("results").get("geometry")
+    maybe_geocode = response.json().get("results")
+    response_is_empty = isinstance(maybe_geocode, list)
+
+    lat = maybe_geocode.get("geometry").get("location").get("lat") if not response_is_empty else None
+    lon = maybe_geocode.get("geometry").get("location").get("lng") if not response_is_empty else None
 
     return GeoLocation(
-        lat=geocode.get("location").get("lat"),
-        lon=geocode.get("location").get("lng"),
+        lat=lat,
+        lon=lon,
     )
