@@ -65,7 +65,7 @@ class App:
             processed = await turbine.process(raw, format_and_enrich)
             silver = await turbine.resources("redshift")
 
-            await silver.write(processed, "employees_enriched", {})
+            await silver.write(processed, "employees_enriched", {"table.name.format": "employees_enriched"})
 
         except Exception as e:
             print(e, file=sys.stderr)
