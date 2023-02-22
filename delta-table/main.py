@@ -24,8 +24,8 @@ def format_and_enrich(records: RecordList) -> RecordList:
         payload = record.value["payload"]
 
         geolocation = enrich.get_geo_location_from_postcode(payload["postcode"])
-        payload.value["latitude"] = geolocation.latitude
-        payload.value["longitude"] = geolocation.longitude
+        payload["latitude"] = geolocation.latitude
+        payload["longitude"] = geolocation.longitude
 
         for key, val in payload.items():
             if key in data:
@@ -33,8 +33,6 @@ def format_and_enrich(records: RecordList) -> RecordList:
             else:
                 data.update({key: [val]})
         
-        record.value["payload"] = payload
-
     delta.write_records(data=data)
 
     return records
@@ -63,7 +61,7 @@ class App:
             raw = await source.records("employees")
 
             processed = await turbine.process(raw, format_and_enrich)
-            silver = await turbine.resources("redshift")
+            silver = await turbine.resources("url")
 
             await silver.write(processed, "employees_enriched", {"table.name.format": "employees_enriched"})
 
