@@ -1,7 +1,6 @@
 #!/usr/bin/python
 import os
 
-from deltalake import writer
 from deltalake import DeltaTable
 
 STORAGE_OPTIONS = {

@@ -5,8 +5,8 @@ import sys
 import sentry_sdk
 from turbine.runtime import RecordList, Runtime
 
-import enhance
-import utils
+import delta  # Our Delta Lake writing code
+import enrich  # Our Data Enrichment code
 
 logging.basicConfig(level=logging.INFO)
 
@@ -17,26 +17,15 @@ sentry_sdk.init(
 
 
 def format_and_enrich(records: RecordList) -> RecordList:
-    """
-    In order to write to a DeltaTable using delta-rs we need to convert our Record/Fixture
-    data into a [DataFrame](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html)
-
-    We are stepping through all available records and parsing out the value in `payload`. The
-    key in `payload` corresponds to the column name, the value is the row value.
-    """
     data = {}
 
     for record in records:
 
         payload = record.value["payload"]
 
-        """
-        Turbine functions can invoke other fuctions that make REST requests.
-        We are also able to modify records in a turbine function however needed
-        """
-        geolocation = enhance.GeoLocation(payload["postcode"])
-        payload.value["latitude"] = geolocation.latitude
-        payload.value["longitude"] = geolocation.longitude
+        geolocation = enrich.get_geo_location_from_postcode(payload["postcode"])
+        payload["latitude"] = geolocation.latitude
+        payload["longitude"] = geolocation.longitude
 
         for key, val in payload.items():
             if key in data:
@@ -44,11 +33,7 @@ def format_and_enrich(records: RecordList) -> RecordList:
             else:
                 data.update({key: [val]})
 
-    """
-    Turbine functions are able to access code in other modules within your application
-    """
-    # utils.write_records(data=data)
-    utils.write_records(data=data)
+    delta.write_records(data=data)
 
     return records
 
@@ -58,10 +43,6 @@ class App:
     async def run(turbine: Runtime):
         try:
 
-            """
-            Register S3 secrets with your application so they are
-            available at run time
-            """
             # secrets for writing to a S3 deltatable
             turbine.register_secrets("AWS_ACCESS_KEY_ID")
             turbine.register_secrets("AWS_SECRET_ACCESS_KEY")
@@ -75,31 +56,17 @@ class App:
             # with additional data
             turbine.register_secrets("GOOGLE_API_KEY")
 
+            source = await turbine.resources("postgres_source")
+            raw = await source.records("employees")
 
-            """
-            Connect your turbine application to your data 
-            source of choice (in this case, a postgres database)
-            """
-            source = await turbine.resources("pg")
+            processed = await turbine.process(raw, format_and_enrich)
+            silver = await turbine.resources("url")
 
-            """
-            Stream rows from source resource in the form of 
-            records
-            """
-            unprocessed = await source.records("employees")
-
-            """
-            Use turbine function defined above to write to a delta
-            table. 
-            """
-            processed = await turbine.process(unprocessed, format_and_enrich)
-
-
-            silver_destination = await turbine.resources("flake")
-            bronze_destination = await turbine.resources("pg")
-
-            await silver_destination.write(processed, "silverRecords", {})
-            await bronze_destination.write(unprocessed, "bronzeRecords", {})
+            await silver.write(
+                processed,
+                "employees_enriched",
+                {"table.name.format": "employees_enriched"},
+            )
 
         except Exception as e:
             print(e, file=sys.stderr)
