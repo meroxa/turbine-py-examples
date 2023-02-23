@@ -6,7 +6,7 @@ import sentry_sdk
 from turbine.runtime import RecordList, Runtime
 
 import delta  # Our Delta Lake writing code
-import enrich # Our Data Enrichment code
+import enrich  # Our Data Enrichment code
 
 logging.basicConfig(level=logging.INFO)
 
@@ -32,7 +32,7 @@ def format_and_enrich(records: RecordList) -> RecordList:
                 data[key].append(val)
             else:
                 data.update({key: [val]})
-        
+
     delta.write_records(data=data)
 
     return records
@@ -56,14 +56,17 @@ class App:
             # with additional data
             turbine.register_secrets("GOOGLE_API_KEY")
 
-
             source = await turbine.resources("postgres_source")
             raw = await source.records("employees")
 
             processed = await turbine.process(raw, format_and_enrich)
             silver = await turbine.resources("url")
 
-            await silver.write(processed, "employees_enriched", {"table.name.format": "employees_enriched"})
+            await silver.write(
+                processed,
+                "employees_enriched",
+                {"table.name.format": "employees_enriched"},
+            )
 
         except Exception as e:
             print(e, file=sys.stderr)
